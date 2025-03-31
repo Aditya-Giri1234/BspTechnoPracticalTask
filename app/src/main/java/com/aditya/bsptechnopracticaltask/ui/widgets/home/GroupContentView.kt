@@ -2,8 +2,8 @@ package com.aditya.bsptechnopracticaltask.ui.widgets.home
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -19,10 +19,8 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -42,7 +40,7 @@ import com.aditya.bsptechnopracticaltask.ui.components.AddVerticalSpace
 import com.aditya.bsptechnopracticaltask.ui.components.ImageLoading
 
 @Composable
-fun GroupContentView(modifier: Modifier = Modifier, response: BookResponse) {
+fun LazyListScope.GroupContentView(modifier: Modifier = Modifier, response: BookResponse) {
     val data by remember {
         derivedStateOf {
             response.page?.elements?.find {
@@ -55,20 +53,16 @@ fun GroupContentView(modifier: Modifier = Modifier, response: BookResponse) {
         data != null,
         modifier = modifier
     ) {
-        Column(Modifier.fillMaxWidth()) {
+        item {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 Text(
                     data?.header ?: "",
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        color = Color.Black.copy(
-                            alpha = .6f
-                        ),
+                    style = MaterialTheme.typography.headlineSmall.copy(
+                        color = Color.Black,
                         fontWeight = FontWeight.Medium
                     )
                 )
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
+                Row() {
                     Text(
                         "See All",
                         style = MaterialTheme.typography.bodyMedium.copy(
@@ -77,78 +71,75 @@ fun GroupContentView(modifier: Modifier = Modifier, response: BookResponse) {
                         )
                     )
                     AddHorizontalSpace(5)
-                    IconButton(onClick = {}) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                            tint = Color.Green,
-                            contentDescription = ""
-                        )
-                    }
+                    Icon(
+                        Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                        tint = Color.Green,
+                        contentDescription = ""
+                    )
                 }
             }
             AddVerticalSpace(15)
-            data?.componentItems?.let { data1 ->
-                LazyRow(
-                    Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+        }
+        data?.componentItems?.let { data1 ->
+            items(data1) { item ->
+                Card(
+                    modifier = Modifier
+                        .padding(10.dp), // Padding should be applied outside
+                    elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.Transparent) // Make card transparent so gradient is visible
                 ) {
-                    items(data1) { item ->
-                        Card(
-                            modifier = Modifier
-                                .background(
-                                    Brush.verticalGradient(
-                                        listOf(
-                                            Color.White,
-                                            Color.Gray.copy(
-                                                alpha = .7f
-                                            )
-                                        ),
+                    Box(
+                        modifier = Modifier
+                            .background(
+                                Brush.horizontalGradient( // Apply horizontal gradient
+                                    listOf(
+                                        Color.White,
+                                        Color.Gray.copy(alpha = 0.2f)
                                     )
                                 )
-                                .padding(10.dp),
-                            elevation = CardDefaults.cardElevation(
-                                defaultElevation = 4.dp
                             )
+                            .padding(10.dp) // Inner padding for content
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxSize(),
+                            horizontalArrangement = Arrangement.Start,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Row(
-                                modifier = Modifier.fillMaxSize(),
-                                horizontalArrangement = Arrangement.Center,
-                                verticalAlignment = Alignment.CenterVertically
+                            ImageLoading(
+                                item.mediaData?.cover?.fullUrl ?: "",
+                                Modifier
+                                    .height(100.dp)
+                                    .width(90.dp)
+                                    .clip(RoundedCornerShape(10.dp))
+                            )
+                            AddHorizontalSpace(10)
+                            Column(
+                                horizontalAlignment = Alignment.Start,
+                                verticalArrangement = Arrangement.Center
                             ) {
-                                ImageLoading(
-                                    item.imageUrl ?: "",
-                                    Modifier
-                                        .height(60.dp)
-                                        .width(50.dp)
-                                        .clip(RoundedCornerShape(10.dp))
+                                Text(
+                                    item.mediaData?.title ?: "",
+                                    style = MaterialTheme.typography.bodyMedium.copy(
+                                        color = Color.Black,
+                                        fontWeight = FontWeight.SemiBold
+                                    )
                                 )
-                                AddHorizontalSpace(10)
-                                Column (
-                                    horizontalAlignment = Alignment.Start,
-                                    verticalArrangement = Arrangement.Center
-                                ){
-                                    Text(
-                                        item.mediaData?.title ?: "",
-                                        style = MaterialTheme.typography.bodyMedium.copy(
-                                            color = Color.Black,
-                                            fontWeight = FontWeight.SemiBold
-                                        )
-                                    )
-                                    AddVerticalSpace(5)
-                                    Text(
-                                        item.mediaData?.authors?.firstOrNull()?.let { "${it.firstName} ${it.lastName}" } ?: "",
-                                        style = MaterialTheme.typography.bodyMedium.copy(
-                                            color = Color.Black,
-                                            fontWeight = FontWeight.SemiBold
-                                        ),
-                                        maxLines = 3,
-                                        overflow = TextOverflow.Ellipsis
-                                    )
-                                }
+                                AddVerticalSpace(5)
+                                Text(
+                                    item.mediaData?.authors?.firstOrNull()
+                                        ?.let { "${it.firstName} ${it.lastName}" } ?: "",
+                                    style = MaterialTheme.typography.bodyMedium.copy(
+                                        color = Color.Black,
+                                        fontWeight = FontWeight.Light
+                                    ),
+                                    maxLines = 3,
+                                    overflow = TextOverflow.Ellipsis
+                                )
                             }
                         }
                     }
                 }
+
             }
         }
     }

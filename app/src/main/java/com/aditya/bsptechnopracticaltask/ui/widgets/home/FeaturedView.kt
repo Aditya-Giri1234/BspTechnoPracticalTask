@@ -5,11 +5,13 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -32,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.core.text.HtmlCompat
 import com.aditya.bsptechnopracticaltask.common.utils.ElementType
 import com.aditya.bsptechnopracticaltask.domain.models.BookResponse
 import com.aditya.bsptechnopracticaltask.ui.components.AddVerticalSpace
@@ -52,13 +55,11 @@ fun FeaturedView(modifier: Modifier = Modifier, response: BookResponse) {
         data != null,
         modifier = modifier
     ) {
-        Column(Modifier.fillMaxWidth()) {
+        Column(Modifier.fillMaxWidth().padding(10.dp)) {
             Text(
                 data?.header ?: "",
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    color = Color.Black.copy(
-                        alpha = .6f
-                    ),
+                style = MaterialTheme.typography.headlineSmall.copy(
+                    color = Color.Black,
                     fontWeight = FontWeight.Medium
                 )
             )
@@ -71,61 +72,61 @@ fun FeaturedView(modifier: Modifier = Modifier, response: BookResponse) {
                     items(data1) { item ->
                         Card(
                             modifier = Modifier
-                                .background(
-                                    Brush.verticalGradient(
-                                        listOf(
-                                            Color.White,
-                                            Color.Gray.copy(
-                                                alpha = .7f
-                                            )
-                                        ),
-                                    )
-                                )
-                                .padding(10.dp),
-                            elevation = CardDefaults.cardElevation(
-                                defaultElevation = 4.dp
-                            )
+                                .width(250.dp)
+                                .padding(10.dp), // Padding should be outside Card
+                            elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+                            colors = CardDefaults.cardColors(containerColor = Color.Transparent) // Set transparent so gradient shows
                         ) {
-                            Column(
-                                modifier = Modifier.fillMaxSize(),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center
-                            ) {
-                                ImageLoading(
-                                    item.imageUrl ?: "",
-                                    Modifier
-                                        .height(150.dp)
-                                        .fillMaxWidth(.8f)
-                                        .clip(RoundedCornerShape(10.dp))
-                                )
-                                AddVerticalSpace(10)
-                                Text(
-                                    item.mediaData?.title ?: "",
-                                    style = MaterialTheme.typography.bodyMedium.copy(
-                                        color = Color.Black,
-                                        fontWeight = FontWeight.SemiBold
+                            Box(
+                                modifier = Modifier
+                                    .background(
+                                        Brush.verticalGradient(
+                                            listOf(
+                                                Color.White,
+                                                Color.Gray.copy(alpha = 0.2f)
+                                            )
+                                        )
                                     )
-                                )
-                                AddVerticalSpace(5)
-                                Text(
-                                    item.mediaData?.description ?: "",
-                                    style = MaterialTheme.typography.bodyMedium.copy(
-                                        color = Color.Black,
-                                        fontWeight = FontWeight.SemiBold
-                                    ),
-                                    maxLines = 3,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                                AddVerticalSpace(10)
-                                TextButton(
-                                    onClick = {
-
-                                    },
-                                    modifier = Modifier.clip(RoundedCornerShape(10.dp)).border(1.dp , color = Color.Red.copy(
-                                        alpha = .8f
-                                    ))
+                                    .padding(10.dp) // Inner padding for content
+                            ) {
+                                Column(
+                                    modifier = Modifier.fillMaxSize(),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.Center
                                 ) {
-                                    Text("Listen Now")
+                                    ImageLoading(
+                                        item.mediaData?.cover?.fullUrl ?: "",
+                                        Modifier
+                                            .height(150.dp)
+                                            .clip(RoundedCornerShape(10.dp))
+                                    )
+                                    AddVerticalSpace(10)
+                                    Text(
+                                        item.mediaData?.title ?: "",
+                                        style = MaterialTheme.typography.bodyMedium.copy(
+                                            color = Color.Black,
+                                            fontWeight = FontWeight.SemiBold
+                                        )
+                                    )
+                                    AddVerticalSpace(5)
+                                    Text(
+                                        HtmlCompat.fromHtml(item.mediaData?.description ?: "", 0).toString(),
+                                        style = MaterialTheme.typography.bodyMedium.copy(
+                                            color = Color.Black,
+                                            fontWeight = FontWeight.Light
+                                        ),
+                                        maxLines = 3,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                    AddVerticalSpace(10)
+                                    TextButton(
+                                        onClick = { },
+                                        modifier = Modifier
+                                            .border(1.dp, Color.Red.copy(alpha = 0.8f), RoundedCornerShape(10.dp))
+                                            .clip(RoundedCornerShape(10.dp))
+                                    ) {
+                                        Text("Listen Now" , color = Color.Black)
+                                    }
                                 }
                             }
                         }

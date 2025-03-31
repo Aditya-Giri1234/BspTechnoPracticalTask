@@ -6,15 +6,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -47,29 +46,27 @@ fun ClassicView(modifier: Modifier = Modifier, response: BookResponse) {
         modifier = modifier
     ) {
         Column(Modifier.fillMaxWidth()) {
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Row(Modifier.fillMaxWidth().padding(10.dp), horizontalArrangement = Arrangement.SpaceBetween) {
                 Column {
                     Text(
                         data?.header ?: "",
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            color = Color.Black.copy(
-                                alpha = .6f
-                            ),
+                        style = MaterialTheme.typography.headlineSmall.copy(
+                            color = Color.Black,
                             fontWeight = FontWeight.Medium
                         )
                     )
                     AddVerticalSpace(5)
                     Text(
                         data?.subheader ?: "",
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            color = Color.Black,
-                            fontWeight = FontWeight.SemiBold
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            color = Color.Black.copy(
+                                alpha = .7f
+                            ),
+                            fontWeight = FontWeight.Light
                         )
                     )
                 }
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
+                Row {
                     Text(
                         "See All",
                         style = MaterialTheme.typography.bodyMedium.copy(
@@ -78,28 +75,26 @@ fun ClassicView(modifier: Modifier = Modifier, response: BookResponse) {
                         )
                     )
                     AddHorizontalSpace(5)
-                    IconButton(onClick = {}) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                            tint = Color.Green,
-                            contentDescription = ""
-                        )
-                    }
+                    Icon(
+                        Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                        tint = Color.Green,
+                        contentDescription = ""
+                    )
                 }
             }
 
             AddVerticalSpace(5)
             data?.componentItems?.let { data1 ->
                 LazyRow(
-                    Modifier.fillMaxWidth(),
+                    Modifier.fillMaxWidth().padding(start = 10.dp),
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     items(data1) {
                         ImageLoading(
-                            it.imageUrl ?: "",
+                            it.mediaData?.cover?.fullUrl ?: "",
                             Modifier
-                                .width(50.dp)
-                                .height(100.dp)
+                                .width(150.dp)
+                                .height(200.dp)
                                 .clip(RoundedCornerShape(10.dp))
                         )
                     }

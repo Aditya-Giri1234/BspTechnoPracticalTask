@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -38,10 +39,10 @@ fun CarousalView(modifier: Modifier = Modifier, response: BookResponse) {
         data != null,
         modifier = modifier
     ) {
-        Column(Modifier.fillMaxWidth()) {
+        Column(Modifier.fillMaxWidth().padding(10.dp)) {
             Text(
                 data?.header ?: "",
-                style = MaterialTheme.typography.bodyMedium.copy(
+                style = MaterialTheme.typography.bodyLarge.copy(
                     color = Color.Black.copy(
                         alpha = .6f
                     ),
@@ -51,7 +52,7 @@ fun CarousalView(modifier: Modifier = Modifier, response: BookResponse) {
             AddVerticalSpace(5)
             Text(
                 data?.subheader ?: "",
-                style = MaterialTheme.typography.bodyMedium.copy(
+                style = MaterialTheme.typography.titleSmall.copy(
                     color = Color.Black,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -67,7 +68,7 @@ fun CarousalView(modifier: Modifier = Modifier, response: BookResponse) {
                             it.imageUrl ?: "",
                             Modifier
                                 .height(150.dp)
-                                .fillMaxWidth(.8f)
+                                .fillMaxWidth()
                                 .clip(RoundedCornerShape(10.dp))
                         )
                     }
