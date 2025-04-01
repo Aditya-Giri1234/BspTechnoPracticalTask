@@ -19,7 +19,8 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+//        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.aditya.bsptechnopracticaltask.CustomTestRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -66,8 +67,18 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation(libs.hilt.testing)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    //For runner
+    androidTestImplementation(libs.test.runner)
+    androidTestImplementation(libs.test.rule)
+
+    //Mockito testing
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.kotlin)
+    androidTestImplementation(libs.mockito.android)
 
     //Room
     implementation(libs.room)
@@ -84,6 +95,8 @@ dependencies {
     implementation(libs.hilt.navigation.compse)
     ksp(libs.hilt.ksp)
     annotationProcessor(libs.room.annotation)
+    androidTestImplementation(libs.hilt.testing)
+    kspAndroidTest(libs.hilt.android.compiler)
 
     //retrofit
     implementation(libs.retrofit)

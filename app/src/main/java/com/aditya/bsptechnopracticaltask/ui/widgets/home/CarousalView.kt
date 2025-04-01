@@ -42,7 +42,7 @@ fun CarousalView(modifier: Modifier = Modifier, response: BookResponse) {
         Column(Modifier.fillMaxWidth().padding(10.dp)) {
             Text(
                 data?.header ?: "",
-                style = MaterialTheme.typography.bodyLarge.copy(
+                style = MaterialTheme.typography.titleSmall.copy(
                     color = Color.Black.copy(
                         alpha = .6f
                     ),
@@ -52,7 +52,7 @@ fun CarousalView(modifier: Modifier = Modifier, response: BookResponse) {
             AddVerticalSpace(5)
             Text(
                 data?.subheader ?: "",
-                style = MaterialTheme.typography.titleSmall.copy(
+                style = MaterialTheme.typography.titleMedium.copy(
                     color = Color.Black,
                     fontWeight = FontWeight.SemiBold
                 )

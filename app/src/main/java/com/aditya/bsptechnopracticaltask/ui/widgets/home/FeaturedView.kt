@@ -7,6 +7,8 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -31,6 +33,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -46,87 +49,93 @@ fun FeaturedView(modifier: Modifier = Modifier, response: BookResponse) {
     val data by remember {
         derivedStateOf {
             response.page?.elements?.find {
-                it.elementType != null && it.elementType == ElementType.FEATURED.elementType
+                it.elementType == ElementType.FEATURED.elementType
             }
         }
     }
 
     AnimatedVisibility(
-        data != null,
+        visible = data != null,
         modifier = modifier
     ) {
-        Column(Modifier.fillMaxWidth().padding(10.dp)) {
+        Column(
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp, vertical = 5.dp) // Adjust padding for better spacing
+        ) {
             Text(
-                data?.header ?: "",
-                style = MaterialTheme.typography.headlineSmall.copy(
+                text = data?.header.orEmpty(),
+                style = MaterialTheme.typography.titleMedium.copy(
                     color = Color.Black,
                     fontWeight = FontWeight.Medium
                 )
             )
-            AddVerticalSpace(15)
-            data?.componentItems?.let { data1 ->
+            AddVerticalSpace(10)
+
+            data?.componentItems?.let { items ->
                 LazyRow(
-                    Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    items(data1) { item ->
+                    items(items) { item ->
                         Card(
                             modifier = Modifier
-                                .width(250.dp)
-                                .padding(10.dp), // Padding should be outside Card
-                            elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
-                            colors = CardDefaults.cardColors(containerColor = Color.Transparent) // Set transparent so gradient shows
+                                .width(250.dp),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 1.dp), // Slightly increased elevation
+                            colors = CardDefaults.cardColors(containerColor = Color.White), // Set white instead of transparent
+                            shape = RoundedCornerShape(12.dp) // Slightly rounded edges for a modern look
                         ) {
-                            Box(
+                            Column(
                                 modifier = Modifier
+                                    .fillMaxSize()
                                     .background(
                                         Brush.verticalGradient(
                                             listOf(
                                                 Color.White,
-                                                Color.Gray.copy(alpha = 0.2f)
+                                                Color.LightGray.copy(alpha = 0.4f)
                                             )
                                         )
                                     )
-                                    .padding(10.dp) // Inner padding for content
+                                    .padding(12.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
                             ) {
-                                Column(
-                                    modifier = Modifier.fillMaxSize(),
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                    verticalArrangement = Arrangement.Center
+                                ImageLoading(
+                                    imageUrl = item.mediaData?.cover?.fullUrl.orEmpty(),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .aspectRatio(2f/2f)
+                                        .clip(RoundedCornerShape(10.dp)) ,
+                                    contentScale = ContentScale.FillBounds
+                                )
+                                AddVerticalSpace(8)
+                                Text(
+                                    text = item.mediaData?.title.orEmpty(),
+                                    style = MaterialTheme.typography.bodyMedium.copy(
+                                        color = Color.Black,
+                                        fontWeight = FontWeight.SemiBold
+                                    ),
+                                    maxLines = 2,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                                AddVerticalSpace(5)
+                                Text(
+                                    text = HtmlCompat.fromHtml(item.mediaData?.description.orEmpty(), 0).toString(),
+                                    style = MaterialTheme.typography.bodySmall.copy(
+                                        color = Color.Gray,
+                                        fontWeight = FontWeight.Normal
+                                    ),
+                                    maxLines = 3,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                                AddVerticalSpace(8)
+                                TextButton(
+                                    onClick = { },
+                                    modifier = Modifier
+                                        .border(1.dp, Color.Red.copy(alpha = 0.8f), RoundedCornerShape(10.dp))
+                                        .clip(RoundedCornerShape(10.dp))
                                 ) {
-                                    ImageLoading(
-                                        item.mediaData?.cover?.fullUrl ?: "",
-                                        Modifier
-                                            .height(150.dp)
-                                            .clip(RoundedCornerShape(10.dp))
-                                    )
-                                    AddVerticalSpace(10)
-                                    Text(
-                                        item.mediaData?.title ?: "",
-                                        style = MaterialTheme.typography.bodyMedium.copy(
-                                            color = Color.Black,
-                                            fontWeight = FontWeight.SemiBold
-                                        )
-                                    )
-                                    AddVerticalSpace(5)
-                                    Text(
-                                        HtmlCompat.fromHtml(item.mediaData?.description ?: "", 0).toString(),
-                                        style = MaterialTheme.typography.bodyMedium.copy(
-                                            color = Color.Black,
-                                            fontWeight = FontWeight.Light
-                                        ),
-                                        maxLines = 3,
-                                        overflow = TextOverflow.Ellipsis
-                                    )
-                                    AddVerticalSpace(10)
-                                    TextButton(
-                                        onClick = { },
-                                        modifier = Modifier
-                                            .border(1.dp, Color.Red.copy(alpha = 0.8f), RoundedCornerShape(10.dp))
-                                            .clip(RoundedCornerShape(10.dp))
-                                    ) {
-                                        Text("Listen Now" , color = Color.Black)
-                                    }
+                                    Text("Listen Now", color = Color.Red)
                                 }
                             }
                         }

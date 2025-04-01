@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -30,6 +31,7 @@ import com.aditya.bsptechnopracticaltask.domain.models.BookResponse
 import com.aditya.bsptechnopracticaltask.ui.components.AddHorizontalSpace
 import com.aditya.bsptechnopracticaltask.ui.components.AddVerticalSpace
 import com.aditya.bsptechnopracticaltask.ui.components.ImageLoading
+import com.aditya.bsptechnopracticaltask.ui.theme.DarkGreen
 
 @Composable
 fun ClassicView(modifier: Modifier = Modifier, response: BookResponse) {
@@ -50,7 +52,7 @@ fun ClassicView(modifier: Modifier = Modifier, response: BookResponse) {
                 Column {
                     Text(
                         data?.header ?: "",
-                        style = MaterialTheme.typography.headlineSmall.copy(
+                        style = MaterialTheme.typography.titleMedium.copy(
                             color = Color.Black,
                             fontWeight = FontWeight.Medium
                         )
@@ -58,7 +60,7 @@ fun ClassicView(modifier: Modifier = Modifier, response: BookResponse) {
                     AddVerticalSpace(5)
                     Text(
                         data?.subheader ?: "",
-                        style = MaterialTheme.typography.bodyLarge.copy(
+                        style = MaterialTheme.typography.bodySmall.copy(
                             color = Color.Black.copy(
                                 alpha = .7f
                             ),
@@ -66,18 +68,20 @@ fun ClassicView(modifier: Modifier = Modifier, response: BookResponse) {
                         )
                     )
                 }
-                Row {
+                Row(
+                    horizontalArrangement = Arrangement.Center ,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Text(
                         "See All",
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            color = Color.Green,
+                        style = MaterialTheme.typography.bodySmall.copy(
+                            color = DarkGreen,
                             fontWeight = FontWeight.SemiBold
                         )
                     )
-                    AddHorizontalSpace(5)
                     Icon(
                         Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                        tint = Color.Green,
+                        tint = DarkGreen,
                         contentDescription = ""
                     )
                 }
