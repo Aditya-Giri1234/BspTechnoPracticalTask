@@ -75,11 +75,6 @@ dependencies {
     androidTestImplementation(libs.test.runner)
     androidTestImplementation(libs.test.rule)
 
-    //Mockito testing
-    testImplementation(libs.mockito.core)
-    testImplementation(libs.mockito.kotlin)
-    androidTestImplementation(libs.mockito.android)
-
     //Room
     implementation(libs.room)
     implementation(libs.room.ktx)
